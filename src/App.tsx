@@ -1,32 +1,12 @@
 import "./App.css";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { CreateSurvey } from "./components/create-survey";
 
 function App() {
   return (
-    <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <Button>Click me</Button>
-      <Card>
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p>Card Content</p>
-        </CardContent>
-        <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter>
-      </Card>
-    </>
+    <main className="text-center max-w-[1280px] mx-auto px-10 pt-5">
+      <h1 className="text-5xl font-bold mb-5">Survey Generator</h1>
+      <CreateSurvey />
+    </main>
   );
 }
 
