@@ -10,7 +10,7 @@ export function Home() {
 
   return (
     <>
-      Recent Surveys {allSurveysList.length}
+      Recent Surveys: {allSurveysList.length}
       <ul>
         {allSurveysList.map((survey) => (
           <li key={survey.id}>

@@ -1,9 +1,17 @@
+import { Header } from "@/components/header";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-    </>
-  ),
+  component: Root,
 });
+
+function Root() {
+  return (
+    <>
+      <main className="text-center max-w-[1280px] mx-auto px-10 pt-5">
+        <Header />
+        <Outlet />
+      </main>
+    </>
+  );
+}
