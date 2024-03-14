@@ -9,12 +9,15 @@ export type SurveyDefinition = Partial<SurveyId> & {
   };
   choice: {
     question: string;
-    options: {
-      a: string;
-      b: string;
-      c: string;
-    };
+    // options: {
+    //   id: string;
+    //   value: string;
+    // }[];
   };
+  things: {
+    id: string;
+    value: string;
+  }[];
 };
 
 export type SurveyDefinitionWithId = SurveyId & SurveyDefinition;

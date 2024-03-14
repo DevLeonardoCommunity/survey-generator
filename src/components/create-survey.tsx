@@ -22,12 +22,9 @@ export const CreateSurvey = () => {
       },
       choice: {
         question: "",
-        options: {
-          a: "",
-          b: "",
-          c: "",
-        },
+        //options: [] as Array<{ id: string; value: string }>,
       },
+      things: [],
     },
     onSubmit: async ({ value }) => {
       const id = save(value);
@@ -114,42 +111,45 @@ export const CreateSurvey = () => {
                 />
               )}
             />
-            <form.Field
-              name="choice.options.a"
-              children={(field) => (
-                <Input
-                  type="text"
-                  placeholder="Option A"
-                  name={field.name}
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              )}
-            />
-            <form.Field
-              name="choice.options.b"
-              children={(field) => (
-                <Input
-                  type="text"
-                  placeholder="Option B"
-                  name={field.name}
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              )}
-            />
-            <form.Field
-              name="choice.options.c"
-              children={(field) => (
-                <Input
-                  type="text"
-                  placeholder="Option C"
-                  name={field.name}
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                />
-              )}
-            />
+            <form.Field name="things" mode="array">
+              {(field) => {
+                return (
+                  <div>
+                    {field.state.value.map((_, i) => {
+                      return (
+                        <form.Field key={i} name={`things[${i}].id`}>
+                          {(subField) => {
+                            return (
+                              <Input
+                                type="text"
+                                placeholder="Question"
+                                className="text-lg h-12"
+                                name={subField.name}
+                                value={subField.state.value}
+                                onChange={(e) =>
+                                  subField.handleChange(e.target.value)
+                                }
+                              />
+                            );
+                          }}
+                        </form.Field>
+                      );
+                    })}
+                    <button
+                      onClick={() =>
+                        field.pushValue({
+                          id: "a",
+                          value: "b",
+                        })
+                      }
+                      type="button"
+                    >
+                      Add person
+                    </button>
+                  </div>
+                );
+              }}
+            </form.Field>
           </CardContainer>
         </Card>
         <div className="flex justify-center gap-3">
