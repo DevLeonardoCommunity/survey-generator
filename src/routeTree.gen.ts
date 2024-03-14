@@ -1,6 +1,6 @@
-/* eslint-disable */
+/* prettier-ignore-start */
 
-/* prettier-ignore */
+/* eslint-disable */
 
 // @ts-nocheck
 
@@ -63,3 +63,5 @@ export const routeTree = rootRoute.addChildren([
   IdLazyRoute,
   NewLazyRoute,
 ])
+
+/* prettier-ignore-end */
