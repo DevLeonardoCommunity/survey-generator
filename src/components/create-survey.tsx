@@ -22,9 +22,8 @@ export const CreateSurvey = () => {
       },
       choice: {
         question: "",
-        //options: [] as Array<{ id: string; value: string }>,
+        options: [],
       },
-      things: [],
     },
     onSubmit: async ({ value }) => {
       const id = save(value);
@@ -111,13 +110,13 @@ export const CreateSurvey = () => {
                 />
               )}
             />
-            <form.Field name="things" mode="array">
+            <form.Field name="choice.options" mode="array">
               {(field) => {
                 return (
                   <div>
                     {field.state.value.map((_, i) => {
                       return (
-                        <form.Field key={i} name={`things[${i}].id`}>
+                        <form.Field key={i} name={`choice.options[${i}].value`}>
                           {(subField) => {
                             return (
                               <Input
