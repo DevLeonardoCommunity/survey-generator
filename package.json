@@ -13,6 +13,7 @@
     "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
+    "@tailwindcss/typography": "^0.5.12",
     "@tanstack/react-form": "^0.18.0",
     "@tanstack/react-router": "^1.22.5",
     "@tanstack/valibot-form-adapter": "^0.13.7",

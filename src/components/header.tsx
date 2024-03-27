@@ -13,7 +13,7 @@ export const Header = () => {
         </Button>
       </div>
       <h1 className="text-5xl font-bold">Survey Generator</h1>
-      <div className="flex-1">
+      <div className="flex-1 text-right">
         <ModeToggle />
       </div>
     </header>
