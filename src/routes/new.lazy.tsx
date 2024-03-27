@@ -1,4 +1,4 @@
-import { CreateSurvey } from "@/components/create-survey";
+import { CreateSurvey } from "@/components/survey-generator/create-survey";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/new")({
@@ -6,9 +6,5 @@ export const Route = createLazyFileRoute("/new")({
 });
 
 function NewSurvey() {
-  return (
-    <>
-      <CreateSurvey />
-    </>
-  );
+  return <CreateSurvey />;
 }

@@ -4,17 +4,26 @@ export type SurveyDefinition = Partial<SurveyId> & {
     title: string;
     description: string;
   };
-  text: {
-    question: string;
-  };
-  choice: {
-    question: string;
-    options: {
-      id: string;
-      value: string;
-    }[];
-  };
+  questions: Questions[];
 };
+
+export type TextQuestion = SurveyId & {
+  type: "text";
+  question: string;
+};
+
+export type ChoiceQuestion = SurveyId & {
+  type: "choice";
+  question: string;
+  options: {
+    id: string;
+    value: string;
+  }[];
+};
+
+export type Questions = TextQuestion | ChoiceQuestion;
+
+export type QuestionType = Questions["type"];
 
 export type SurveyDefinitionWithId = SurveyId & SurveyDefinition;
 
