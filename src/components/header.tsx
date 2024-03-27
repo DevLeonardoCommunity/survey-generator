@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "./ui/button";
+import { ModeToggle } from "./mode-toggle";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -12,7 +13,9 @@ export const Header = () => {
         </Button>
       </div>
       <h1 className="text-5xl font-bold">Survey Generator</h1>
-      <div className="flex-1" />
+      <div className="flex-1">
+        <ModeToggle />
+      </div>
     </header>
   );
 };
