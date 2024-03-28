@@ -1,5 +1,5 @@
 type SurveyId = { id: string };
-export type SurveyDefinition = Partial<SurveyId> & {
+export type SurveyDefinition = SurveyId & {
   main: {
     title: string;
     description: string;

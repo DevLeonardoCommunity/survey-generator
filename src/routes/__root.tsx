@@ -8,7 +8,7 @@ export const Route = createRootRoute({
 function Root() {
   return (
     <>
-      <main className="text-center max-w-[1280px] mx-auto px-10 pt-5">
+      <main className="max-w-[1280px] mx-auto px-10 pt-5">
         <Header />
         <Outlet />
       </main>

@@ -1,16 +1,23 @@
 import { useStorage } from "@/hooks/useStorage";
+import { generateId } from "@/lib/utils";
 import {
   ChoiceQuestion,
   QuestionType,
   SurveyDefinition,
   TextQuestion,
 } from "@/types/survey";
-import { FieldApi, FormApi, Updater, useForm } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "../ui/button";
-import { Card } from "../ui/card";
-import { CardContainer } from "../ui/card-container";
 import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { ChoiceFormField } from "./question-blocks/choice";
+import { TextFormField } from "./question-blocks/text";
+import {
+  QuestionCard,
+  QuestionCardItem,
+  QuestionCardTitle,
+} from "./question-card";
 import { SelectQuestionType } from "./select-question-type";
 
 export const CreateSurvey = () => {
@@ -18,12 +25,28 @@ export const CreateSurvey = () => {
   const { save } = useStorage();
   const form = useForm<SurveyDefinition>({
     defaultValues: {
-      id: undefined,
+      id: generateId(),
       main: {
         title: "",
         description: "",
       },
-      questions: [],
+      questions: [
+        {
+          id: generateId(),
+          type: "choice",
+          question: "What is your name?",
+          options: [
+            {
+              id: generateId(),
+              value: "John",
+            },
+            {
+              id: generateId(),
+              value: "Jane",
+            },
+          ],
+        },
+      ],
     },
     onSubmit: async ({ value }) => {
       const id = save(value);
@@ -48,7 +71,12 @@ export const CreateSurvey = () => {
       }
     };
 
-    form.pushFieldValue("questions", getDefault());
+    const newQuestion = {
+      ...getDefault(),
+      id: generateId(),
+    };
+
+    form.pushFieldValue("questions", newQuestion);
     console.log(form.state.values);
   };
 
@@ -68,11 +96,13 @@ export const CreateSurvey = () => {
       className="w-full flex flex-col items-center"
     >
       <div className="flex flex-col gap-3 items-center w-[800px] max-w-[95%]">
-        <Card className="w-full">
-          <CardContainer>
-            <form.Field
-              name="main.title"
-              children={(field) => (
+        <QuestionCard>
+          <QuestionCardTitle>Survey Definition</QuestionCardTitle>
+          <form.Field
+            name="main.title"
+            children={(field) => (
+              <QuestionCardItem>
+                <Label>Title</Label>
                 <Input
                   type="text"
                   placeholder="Title"
@@ -81,11 +111,14 @@ export const CreateSurvey = () => {
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
-              )}
-            />
-            <form.Field
-              name="main.description"
-              children={(field) => (
+              </QuestionCardItem>
+            )}
+          />
+          <form.Field
+            name="main.description"
+            children={(field) => (
+              <QuestionCardItem>
+                <Label>Description</Label>
                 <Input
                   type="text"
                   placeholder="Description"
@@ -93,19 +126,23 @@ export const CreateSurvey = () => {
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
-              )}
-            />
-          </CardContainer>
-        </Card>
+              </QuestionCardItem>
+            )}
+          />
+        </QuestionCard>
 
         <form.Field name="questions" mode="array">
           {(field) =>
             field.state.value.map((_, i) => {
               switch (field.state.value[i].type) {
                 case "text":
-                  return TextFormField(i, form);
+                  return (
+                    <TextFormField key={i} questionIndex={i} form={form} />
+                  );
                 case "choice":
-                  return ChoiceFormField(i, form);
+                  return (
+                    <ChoiceFormField key={i} questionIndex={i} form={form} />
+                  );
               }
             })
           }
@@ -138,106 +175,3 @@ export const CreateSurvey = () => {
     </form>
   );
 };
-function ChoiceFormField(
-  i: number,
-  form: FormApi<SurveyDefinition, undefined>
-) {
-  return (
-    <Card key={i} className="w-full">
-      <CardContainer>
-        <form.Field
-          name={`questions[${i}].question`}
-          children={(field) => (
-            <Input
-              type="text"
-              placeholder="Question"
-              className="text-lg h-12"
-              name={field.name}
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-            />
-          )}
-        />
-        <form.Field
-          name={`questions[${i}].options`}
-          mode="array"
-          children={(
-            field: FieldApi<
-              SurveyDefinition,
-              `questions[${number}].options`,
-              undefined,
-              undefined,
-              ChoiceQuestion["options"]
-            >
-          ) => {
-            return (
-              <div>
-                {field.state.value.map((_, j) => {
-                  return (
-                    <form.Field
-                      key={j}
-                      name={`questions[${i}].options[${j}].value`}
-                      children={(subField) => {
-                        return (
-                          <Input
-                            type="text"
-                            placeholder="Option"
-                            className="text-lg h-12"
-                            name={subField.name}
-                            value={subField.state.value}
-                            onChange={(e) =>
-                              // FIXME: This adds to questions[i]["options[j]"] instead of questions[i].options[j]
-                              (
-                                subField.handleChange as unknown as (
-                                  updater: Updater<string, string>
-                                ) => void
-                              )(e.target.value)
-                            }
-                          />
-                        );
-                      }}
-                    />
-                  );
-                })}
-                <button
-                  onClick={() =>
-                    field.pushValue({
-                      id: "a",
-                      value: "b",
-                    })
-                  }
-                  type="button"
-                >
-                  Add Option
-                </button>
-              </div>
-            );
-          }}
-        />
-      </CardContainer>
-    </Card>
-  );
-}
-
-function TextFormField(i: number, form: FormApi<SurveyDefinition, undefined>) {
-  return (
-    <Card key={i} className="w-full">
-      <CardContainer>
-        <form.Field
-          name={`questions[${i}].question`}
-          children={(field) => (
-            <Input
-              type="text"
-              placeholder="Question"
-              className="text-lg h-12"
-              name={field.name}
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-            />
-          )}
-        />
-        <Input type="text" placeholder="Answer" disabled />
-      </CardContainer>
-    </Card>
-  );
-}
