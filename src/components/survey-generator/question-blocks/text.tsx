@@ -3,6 +3,7 @@ import { SurveyDefinition } from "@/types/survey";
 import { FormApi } from "@tanstack/react-form";
 import {
   QuestionCard,
+  QuestionCardDeleteButton,
   QuestionCardItem,
   QuestionCardTitle,
 } from "../question-card";
@@ -16,6 +17,9 @@ type Props = {
 export const TextFormField = ({ questionIndex, form }: Props) => {
   return (
     <QuestionCard>
+      <QuestionCardDeleteButton
+        onClick={() => form.removeFieldValue(`questions`, questionIndex)}
+      />
       <QuestionCardTitle>Text Question</QuestionCardTitle>
       <form.Field
         name={`questions[${questionIndex}].question`}

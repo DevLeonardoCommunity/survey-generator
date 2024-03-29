@@ -5,10 +5,12 @@ import { ChoiceQuestion, SurveyDefinition } from "@/types/survey";
 import { FieldApi, FormApi, Updater } from "@tanstack/react-form";
 import {
   QuestionCard,
+  QuestionCardDeleteButton,
   QuestionCardItem,
   QuestionCardTitle,
 } from "../question-card";
 import { Label } from "@/components/ui/label";
+import { X } from "lucide-react";
 
 type Props = {
   questionIndex: number;
@@ -16,13 +18,15 @@ type Props = {
 };
 
 /*
-[ ] Remove Option
 [ ] Toggle Single/Multiple
 */
 
 export const ChoiceFormField = ({ questionIndex, form }: Props) => {
   return (
     <QuestionCard key={questionIndex}>
+      <QuestionCardDeleteButton
+        onClick={() => form.removeFieldValue(`questions`, questionIndex)}
+      />
       <QuestionCardTitle>Choice Question</QuestionCardTitle>
       <form.Field
         name={`questions[${questionIndex}].question`}
@@ -63,19 +67,29 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
                       name={`questions[${questionIndex}].options[${j}].value`}
                       children={(subField) => {
                         return (
-                          <Input
-                            type="text"
-                            placeholder="Option"
-                            name={subField.name}
-                            value={subField.state.value}
-                            onChange={(e) =>
-                              (
-                                subField.handleChange as unknown as (
-                                  updater: Updater<string, string>
-                                ) => void
-                              )(e.target.value)
-                            }
-                          />
+                          <div className="flex gap-2 items-center">
+                            <Input
+                              type="text"
+                              placeholder="Option"
+                              name={subField.name}
+                              value={subField.state.value}
+                              onChange={(e) =>
+                                (
+                                  subField.handleChange as unknown as (
+                                    updater: Updater<string, string>
+                                  ) => void
+                                )(e.target.value)
+                              }
+                              autoFocus
+                            />
+                            <Button
+                              variant="ghost"
+                              size="icon-sm"
+                              onClick={() => field.removeValue(j)}
+                            >
+                              <X />
+                            </Button>
+                          </div>
                         );
                       }}
                     />
