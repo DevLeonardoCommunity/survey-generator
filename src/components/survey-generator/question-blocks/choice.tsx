@@ -1,20 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { generateId } from "@/lib/utils";
 import { ChoiceQuestion, SurveyDefinition } from "@/types/survey";
-import { FieldApi, FormApi, Updater } from "@tanstack/react-form";
+import { FieldApi, FormApi } from "@tanstack/react-form";
+import { X } from "lucide-react";
 import {
   QuestionCard,
   QuestionCardDeleteButton,
   QuestionCardItem,
   QuestionCardTitle,
 } from "../question-card";
-import { Label } from "@/components/ui/label";
-import { X } from "lucide-react";
 
 type Props = {
   questionIndex: number;
-  form: FormApi<SurveyDefinition, undefined>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  form: FormApi<SurveyDefinition, any>;
 };
 
 /*
@@ -74,11 +75,7 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
                               name={subField.name}
                               value={subField.state.value}
                               onChange={(e) =>
-                                (
-                                  subField.handleChange as unknown as (
-                                    updater: Updater<string, string>
-                                  ) => void
-                                )(e.target.value)
+                                subField.handleChange(e.target.value as never)
                               }
                               autoFocus
                             />

@@ -30,8 +30,7 @@ export const SelectQuestionType = ({ onAddQuestion }: Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <h3>Add Question</h3>
+    <div className="flex flex-col gap-2 text-center">
       <Select
         onValueChange={(v) => setSurveyType(v as QuestionType)}
         value={surveyType}

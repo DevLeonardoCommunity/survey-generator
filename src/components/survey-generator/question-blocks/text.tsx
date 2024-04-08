@@ -11,7 +11,8 @@ import { Label } from "@/components/ui/label";
 
 type Props = {
   questionIndex: number;
-  form: FormApi<SurveyDefinition, undefined>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  form: FormApi<SurveyDefinition, any>;
 };
 
 export const TextFormField = ({ questionIndex, form }: Props) => {

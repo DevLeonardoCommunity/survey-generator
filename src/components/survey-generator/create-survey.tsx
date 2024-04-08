@@ -8,6 +8,7 @@ import {
 } from "@/types/survey";
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
+import { valibotValidator } from "@tanstack/valibot-form-adapter";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -20,37 +21,30 @@ import {
 } from "./question-card";
 import { SelectQuestionType } from "./select-question-type";
 
+const defaultValues: SurveyDefinition = {
+  id: generateId(),
+  main: {
+    title: "",
+    description: "",
+  },
+  questions: [],
+};
+
 export const CreateSurvey = () => {
   const navigate = useNavigate();
   const { save } = useStorage();
-  const form = useForm<SurveyDefinition>({
-    defaultValues: {
-      id: generateId(),
-      main: {
-        title: "",
-        description: "",
-      },
-      questions: [
-        {
-          id: generateId(),
-          type: "choice",
-          question: "What is your name?",
-          options: [
-            {
-              id: generateId(),
-              value: "John",
-            },
-            {
-              id: generateId(),
-              value: "Jane",
-            },
-          ],
-        },
-      ],
+  const form = useForm({
+    validatorAdapter: valibotValidator,
+    validators: {
+      onChangeAsyncDebounceMs: 500,
+      onChange: SurveyDefinition,
+    },
+    defaultValues,
+    onSubmitInvalid: (x) => {
+      console.log(x);
     },
     onSubmit: async ({ value }) => {
-      const id = save(value);
-      form.setFieldValue("id", id);
+      save(value);
     },
   });
 
@@ -93,7 +87,7 @@ export const CreateSurvey = () => {
         e.stopPropagation();
         void form.handleSubmit();
       }}
-      className="w-full flex flex-col items-center"
+      className="w-full flex flex-col items-center mb-6"
     >
       <div className="flex flex-col gap-3 items-center w-[800px] max-w-[95%]">
         <QuestionCard>
@@ -153,25 +147,28 @@ export const CreateSurvey = () => {
         </div>
       </div>
 
-      <div className="flex justify-center gap-3 mt-6">
-        <Button>Save</Button>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => {
-            console.log(form.state.values);
-          }}
-        >
-          Peek
-        </Button>
-        <Button
-          type="button"
-          onClick={onShowClick}
-          disabled={!form.state.values.id}
-        >
-          Show
-        </Button>
-      </div>
+      <form.Subscribe
+        selector={(state) => [state.canSubmit, state.isSubmitting]}
+        children={([canSubmit, isSubmitting]) => (
+          <div className="flex justify-center gap-3 mt-6">
+            <Button disabled={!canSubmit || isSubmitting}>Save</Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => console.log(form.state.values)}
+            >
+              Peek
+            </Button>
+            <Button
+              type="button"
+              onClick={onShowClick}
+              disabled={!form.state.values.id}
+            >
+              Show
+            </Button>
+          </div>
+        )}
+      />
     </form>
   );
 };
