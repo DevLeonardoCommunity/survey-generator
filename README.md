@@ -1,30 +1,40 @@
-# React + TypeScript + Vite
+# Survey Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+_What's the best way to test a form library if not creating a dynamic form that generates dynamic forms? 🧠_
 
-Currently, two official plugins are available:
+A side project to have fun and experiment with [TanStack Form](https://tanstack.com/form/latest) and [shadcn/ui](https://ui.shadcn.com/).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Contributing
 
-## Expanding the ESLint configuration
+This is not **my** side project, it's **our** side project. I'm happy to accept suggestions and contributions if you want to learn with me, or a star ⭐️ to spread the word.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Roadmap
 
-- Configure the top-level `parserOptions` property like this:
+I'll keep [Issue #1](https://github.com/Balastrong/survey-generator/issues/1) updated with an outline of what I'd like to see here.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+A high-level overview of the project:
+
+- "Create survey" page to create surveys
+  - A Survey has a title and a list of questions
+  - Questions can be any number and of any type
+  - Types include text, number, radio, checkbox, select, date, etc.
+  - Save button
+- "Take survey" page to take surveys
+  - Survey is generated dynamically
+  - A user can take a survey
+  - A user can see the results of a survey
+
+Let's stick with `localStorage` because I'm too lazy to set up a database and it's out of scope as of today, but at some point it will be nice.
+
+Oh and why not, adding some tests could be fun! 🧪
+
+## Running the project
+
+No special instructions needed!
+
+```bash
+npm install
+npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+and you're good to go!
