@@ -8,11 +8,11 @@ import {
   QuestionCardTitle,
 } from "../question-card";
 import { Label } from "@/components/ui/label";
+import { valibotValidator } from "@tanstack/valibot-form-adapter";
 
 type Props = {
   questionIndex: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: FormApi<SurveyDefinition, any>;
+  form: FormApi<SurveyDefinition, typeof valibotValidator>;
 };
 
 export const TextFormField = ({ questionIndex, form }: Props) => {
