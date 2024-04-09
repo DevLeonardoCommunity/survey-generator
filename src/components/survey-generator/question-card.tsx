@@ -1,8 +1,8 @@
-import React from "react";
-import { Card } from "../ui/card";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
+import React, { Children } from "react";
 import { Button } from "../ui/button";
+import { Card } from "../ui/card";
 
 const QuestionCard = React.forwardRef<
   HTMLDivElement,
@@ -21,6 +21,21 @@ const QuestionCardItem = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("flex flex-col gap-2 ", className)} {...props} />
+));
+
+const QuestionCardHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      "grid grid-flow-col justify-center items-center w-full",
+      Children.count(props.children) === 1 ? "grid-cols-1" : "grid-cols-3",
+      className
+    )}
+    {...props}
+  />
 ));
 
 const QuestionCardTitle = React.forwardRef<
@@ -54,7 +69,8 @@ const QuestionCardDeleteButton = React.forwardRef<
 
 export {
   QuestionCard,
+  QuestionCardDeleteButton,
+  QuestionCardHeader,
   QuestionCardItem,
   QuestionCardTitle,
-  QuestionCardDeleteButton,
 };

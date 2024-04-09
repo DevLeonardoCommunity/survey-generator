@@ -1,14 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { generateId } from "@/lib/utils";
 import { ChoiceQuestion, SurveyDefinition } from "@/types/survey";
-import { FormApi } from "@tanstack/react-form";
+import { FormApi, useField } from "@tanstack/react-form";
 import { valibotValidator } from "@tanstack/valibot-form-adapter";
-import { X } from "lucide-react";
+import { CheckSquare2, ChevronDown, CircleDot, X } from "lucide-react";
 import {
   QuestionCard,
   QuestionCardDeleteButton,
+  QuestionCardHeader,
   QuestionCardItem,
   QuestionCardTitle,
 } from "../question-card";
@@ -18,17 +28,49 @@ type Props = {
   form: FormApi<SurveyDefinition, typeof valibotValidator>;
 };
 
-/*
-[ ] Toggle Single/Multiple
-*/
+const variants: { [key in ChoiceQuestion["variant"]]: string } = {
+  single: "Single Choice",
+  multiple: "Multiple Choice",
+  dropdown: "Dropdown",
+};
+
+const iconClassName = "text-muted-foreground";
 
 export const ChoiceFormField = ({ questionIndex, form }: Props) => {
+  const variantField = useField({
+    name: `questions[${questionIndex}].variant`,
+    form,
+  });
+
+  const variantValue = variantField.getValue() as string;
+
   return (
     <QuestionCard key={questionIndex}>
       <QuestionCardDeleteButton
         onClick={() => form.removeFieldValue(`questions`, questionIndex)}
       />
-      <QuestionCardTitle>Choice Question</QuestionCardTitle>
+      <QuestionCardHeader>
+        <Select
+          onValueChange={(variant) => variantField.setValue(variant)}
+          defaultValue={variantValue}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select a variant" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Variants</SelectLabel>
+              {Object.entries(variants).map(([value, label]) => (
+                <SelectItem key={value} value={value}>
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <QuestionCardTitle>Choice Question</QuestionCardTitle>
+      </QuestionCardHeader>
       <form.Field
         name={`questions[${questionIndex}].question`}
         children={(field) => (
@@ -62,6 +104,15 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
                         children={(subField) => {
                           return (
                             <div className="flex gap-2 items-center">
+                              {variantValue === "single" && (
+                                <CircleDot className={iconClassName} />
+                              )}
+                              {variantValue === "multiple" && (
+                                <CheckSquare2 className={iconClassName} />
+                              )}
+                              {variantValue === "dropdown" && (
+                                <ChevronDown className={iconClassName} />
+                              )}
                               <Input
                                 type="text"
                                 placeholder="Option"

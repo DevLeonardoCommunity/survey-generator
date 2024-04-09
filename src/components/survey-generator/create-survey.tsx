@@ -59,8 +59,13 @@ export const CreateSurvey = () => {
         case "choice":
           return {
             type: "choice",
+            variant: "single",
             question: "",
-            options: [] as ChoiceQuestion["options"],
+            options: [
+              {
+                id: generateId(),
+              },
+            ] as ChoiceQuestion["options"],
           } as ChoiceQuestion;
       }
     };
