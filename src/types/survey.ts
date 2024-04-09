@@ -20,6 +20,11 @@ export const ChoiceQuestion = v.merge([
   SurveyId,
   v.object({
     type: v.literal("choice"),
+    variant: v.union([
+      v.literal("single"),
+      v.literal("multiple"),
+      v.literal("dropdown"),
+    ]),
     question: v.string([
       v.minLength(3, "Question must be at least 3 characters"),
     ]),
