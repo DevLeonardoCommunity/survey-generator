@@ -29,7 +29,8 @@ export const ChoiceQuestion = v.merge([
         value: v.string([
           v.minLength(1, "Option must be at least 1 character"),
         ]),
-      })
+      }),
+      [v.minLength(2, "There must be at least 2 options")]
     ),
   }),
 ]);
