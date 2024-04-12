@@ -59,7 +59,7 @@ export const CreateSurvey = () => {
         case "choice":
           return {
             type: "choice",
-            variant: "single",
+            variant: "multiple",
             question: "",
             options: [
               {
