@@ -1,20 +1,30 @@
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { generateId } from "@/lib/utils";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn, generateId } from "@/lib/utils";
 import { ChoiceQuestion, SurveyDefinition } from "@/types/survey";
 import { FormApi, useField } from "@tanstack/react-form";
 import { valibotValidator } from "@tanstack/valibot-form-adapter";
-import { CheckSquare2, ChevronDown, CircleDot, X } from "lucide-react";
+import {
+  CheckCircle2,
+  CheckSquare2,
+  ChevronDown,
+  CircleDot,
+  LucideIcon,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 import {
   QuestionCard,
   QuestionCardDeleteButton,
@@ -28,21 +38,38 @@ type Props = {
   form: FormApi<SurveyDefinition, typeof valibotValidator>;
 };
 
-const variants: { [key in ChoiceQuestion["variant"]]: string } = {
-  single: "Single Choice",
-  multiple: "Multiple Choice",
-  dropdown: "Dropdown",
+const variants: {
+  [key in ChoiceQuestion["variant"]]: {
+    label: string;
+    icon: LucideIcon;
+  };
+} = {
+  single: {
+    label: "Single Choice",
+    icon: CheckCircle2,
+  },
+  multiple: {
+    label: "Multiple Choice",
+    icon: CheckSquare2,
+  },
+  dropdown: {
+    label: "Dropdown",
+    icon: ChevronDown,
+  },
 };
 
 const iconClassName = "text-muted-foreground";
 
 export const ChoiceFormField = ({ questionIndex, form }: Props) => {
+  const [isVariantSelectorOpen, setIsVarianSelectorOpen] = useState(false);
+
   const variantField = useField({
     name: `questions[${questionIndex}].variant`,
     form,
   });
 
-  const variantValue = variantField.getValue() as string;
+  const variantValue = variantField.getValue() as ChoiceQuestion["variant"];
+  const selectedVariant = variants[variantValue];
 
   return (
     <QuestionCard key={questionIndex}>
@@ -50,25 +77,42 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
         onClick={() => form.removeFieldValue(`questions`, questionIndex)}
       />
       <QuestionCardHeader>
-        <Select
-          onValueChange={(variant) => variantField.setValue(variant)}
-          defaultValue={variantValue}
+        <Popover
+          open={isVariantSelectorOpen}
+          onOpenChange={setIsVarianSelectorOpen}
         >
-          <SelectTrigger>
-            <SelectValue placeholder="Select a variant" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Variants</SelectLabel>
-              {Object.entries(variants).map(([value, label]) => (
-                <SelectItem key={value} value={value}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-[150px] justify-start"
+            >
+              <selectedVariant.icon className="mr-2 h-4 w-4 shrink-0" />
+              {selectedVariant.label}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="p-0" align="start">
+            <Command>
+              <CommandList>
+                <CommandGroup>
+                  {Object.entries(variants).map(([value, variant]) => (
+                    <CommandItem
+                      key={value}
+                      value={value}
+                      onSelect={() => {
+                        variantField.setValue(value);
+                        setIsVarianSelectorOpen(false);
+                      }}
+                    >
+                      <variant.icon className={cn("mr-2 h-4 w-4")} />
+                      <span>{variant.label}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
         <QuestionCardTitle>Choice Question</QuestionCardTitle>
       </QuestionCardHeader>
       <form.Field
