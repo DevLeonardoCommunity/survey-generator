@@ -87,8 +87,12 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
               size="sm"
               className="w-[150px] justify-start"
             >
-              <selectedVariant.icon className="mr-2 h-4 w-4 shrink-0" />
-              {selectedVariant.label}
+              {selectedVariant && (
+                <>
+                  <selectedVariant.icon className="mr-2 h-4 w-4 shrink-0" />
+                  {selectedVariant.label}
+                </>
+              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="p-0" align="start">
@@ -125,7 +129,7 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
               placeholder="Question"
               className="text-md"
               name={field.name}
-              value={field.state.value}
+              value={field.state.value ?? ""}
               onChange={(e) => field.handleChange(e.target.value)}
             />
           </QuestionCardItem>
@@ -161,7 +165,7 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
                                 type="text"
                                 placeholder="Option"
                                 name={subField.name}
-                                value={subField.state.value}
+                                value={subField.state.value ?? ""}
                                 onChange={(e) =>
                                   subField.handleChange(e.target.value as never)
                                 }

@@ -76,7 +76,6 @@ export const CreateSurvey = () => {
     };
 
     form.pushFieldValue("questions", newQuestion);
-    console.log(form.state.values);
   };
 
   const onShowClick = () => {
