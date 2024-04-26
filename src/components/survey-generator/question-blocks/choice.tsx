@@ -172,9 +172,9 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
                                 type="text"
                                 placeholder="Option"
                                 name={subField.name}
-                                value={subField.state.value ?? ""}
+                                value={(subField.state.value as string) ?? ""}
                                 onChange={(e) =>
-                                  subField.handleChange(e.target.value as never)
+                                  subField.handleChange(e.target.value)
                                 }
                                 autoFocus
                               />
