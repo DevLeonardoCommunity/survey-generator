@@ -22,6 +22,7 @@ import {
   ChevronDown,
   LucideIcon,
   X,
+  Copy,
 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -65,6 +66,11 @@ const iconClassName = "text-muted-foreground";
 export const ChoiceFormField = ({ questionIndex, form }: Props) => {
   const [isVariantSelectorOpen, setIsVarianSelectorOpen] = useState(false);
 
+  const duplicateQuestion = () => {
+    const question = form.state.values.questions[questionIndex];
+    form.insertFieldValue("questions", questionIndex + 1, { ...question, id: generateId() }, { touch: true });
+  };
+
   return (
     <QuestionCard key={questionIndex}>
       <QuestionCardButtonsBar>
@@ -82,6 +88,10 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
           )}
         />
         <Separator orientation="vertical" />
+        <QuestionCardBarButton
+          onClick={duplicateQuestion}
+          children={<Copy />}
+        />
         <QuestionCardBarButton
           onClick={() => form.removeFieldValue(`questions`, questionIndex)}
           children={<X />}
@@ -177,7 +187,7 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
                                 selector={(state) =>
                                   (
                                     state.values.questions[
-                                      questionIndex
+                                    questionIndex
                                     ] as ChoiceQuestion
                                   ).variant
                                 }
