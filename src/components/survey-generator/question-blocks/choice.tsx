@@ -26,11 +26,14 @@ import {
 import { useState } from "react";
 import {
   QuestionCard,
-  QuestionCardDeleteButton,
+  QuestionCardButtonsBar,
+  QuestionCardBarButton,
   QuestionCardHeader,
   QuestionCardItem,
   QuestionCardTitle,
 } from "../question-card";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 
 type Props = {
   questionIndex: number;
@@ -64,9 +67,26 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
 
   return (
     <QuestionCard key={questionIndex}>
-      <QuestionCardDeleteButton
-        onClick={() => form.removeFieldValue(`questions`, questionIndex)}
-      />
+      <QuestionCardButtonsBar>
+        <form.Field
+          name={`questions[${questionIndex}].required`}
+          children={(field) => (
+            <div className="flex items-center space-x-2">
+              <Switch
+                id={`required-${questionIndex}`}
+                checked={field.state.value}
+                onCheckedChange={() => field.setValue(!field.state.value)}
+              />
+              <Label htmlFor={`required-${questionIndex}`}>Required</Label>
+            </div>
+          )}
+        />
+        <Separator orientation="vertical" />
+        <QuestionCardBarButton
+          onClick={() => form.removeFieldValue(`questions`, questionIndex)}
+          children={<X />}
+        />
+      </QuestionCardButtonsBar>
       <QuestionCardHeader>
         <form.Field
           name={`questions[${questionIndex}].variant`}
@@ -119,19 +139,6 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
           }}
         />
         <QuestionCardTitle>Choice Question</QuestionCardTitle>
-        <form.Field
-          name={`questions[${questionIndex}].required`}
-          children={(field) => (
-            <Button
-              variant={field.state.value ? "destructive" : "outline"}
-              size="sm"
-              onClick={() => field.setValue(!field.state.value)}
-              className="ml-auto"
-            >
-              {field.state.value ? "Required" : "Optional"}
-            </Button>
-          )}
-        />
       </QuestionCardHeader>
       <form.Field
         name={`questions[${questionIndex}].question`}

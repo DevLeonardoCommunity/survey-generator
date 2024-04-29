@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { X } from "lucide-react";
 import React, { Children } from "react";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
@@ -30,7 +29,7 @@ const QuestionCardHeader = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "grid grid-flow-col justify-center items-center w-full mt-8",
+      "grid grid-flow-col justify-center items-center w-full",
       Children.count(props.children) === 1 ? "grid-cols-1" : "grid-cols-3",
       className
     )}
@@ -52,24 +51,30 @@ const QuestionCardTitle = React.forwardRef<
   />
 ));
 
-const QuestionCardDeleteButton = React.forwardRef<
+const QuestionCardButtonsBar = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("flex justify-end gap-4 h-8", className)}
+    {...props}
+  />
+));
+
+const QuestionCardBarButton = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className, children, ...props }, ref) => (
-  <Button
-    ref={ref}
-    className={cn("absolute top-4 right-4", className)}
-    variant={"ghost"}
-    size={"icon-sm"}
-    {...props}
-  >
-    {children ?? <X />}
+>(({ children, ...props }, ref) => (
+  <Button ref={ref} variant={"ghost"} size={"icon-sm"} {...props}>
+    {children}
   </Button>
 ));
 
 export {
   QuestionCard,
-  QuestionCardDeleteButton,
+  QuestionCardBarButton,
+  QuestionCardButtonsBar,
   QuestionCardHeader,
   QuestionCardItem,
   QuestionCardTitle,

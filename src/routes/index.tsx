@@ -10,7 +10,7 @@ export function Home() {
   const { allSurveysList } = useStorage();
 
   return (
-    <main className="flex flex-col gap-6 text-center">
+    <div className="flex flex-col gap-6 text-center">
       <div className="mt-10">
         <h2 className="text-2xl font-bold">Welcome to Survey Generator</h2>
         <p>
@@ -33,6 +33,6 @@ export function Home() {
           ))}
         </ul>
       </div>
-    </main>
+    </div>
   );
 }

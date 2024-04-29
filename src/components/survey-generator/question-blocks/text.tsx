@@ -1,16 +1,19 @@
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { SurveyDefinition } from "@/types/survey";
 import { FormApi } from "@tanstack/react-form";
+import { valibotValidator } from "@tanstack/valibot-form-adapter";
+import { X } from "lucide-react";
 import {
   QuestionCard,
-  QuestionCardDeleteButton,
+  QuestionCardBarButton,
+  QuestionCardButtonsBar,
   QuestionCardHeader,
   QuestionCardItem,
   QuestionCardTitle,
 } from "../question-card";
-import { Label } from "@/components/ui/label";
-import { valibotValidator } from "@tanstack/valibot-form-adapter";
+import { Separator } from "@/components/ui/separator";
 
 type Props = {
   questionIndex: number;
@@ -20,24 +23,28 @@ type Props = {
 export const TextFormField = ({ questionIndex, form }: Props) => {
   return (
     <QuestionCard>
-      <QuestionCardDeleteButton
-        onClick={() => form.removeFieldValue(`questions`, questionIndex)}
-      />
-      <QuestionCardHeader>
-        <QuestionCardTitle>Text Question</QuestionCardTitle>
+      <QuestionCardButtonsBar>
         <form.Field
           name={`questions[${questionIndex}].required`}
           children={(field) => (
-            <Button
-              variant={field.state.value ? "destructive" : "outline"}
-              size="sm"
-              onClick={() => field.setValue(!field.state.value)}
-              className="ml-auto"
-            >
-              {field.state.value ? "Required" : "Optional"}
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Switch
+                id={`required-${questionIndex}`}
+                checked={field.state.value}
+                onCheckedChange={() => field.setValue(!field.state.value)}
+              />
+              <Label htmlFor={`required-${questionIndex}`}>Required</Label>
+            </div>
           )}
         />
+        <Separator orientation="vertical" />
+        <QuestionCardBarButton
+          onClick={() => form.removeFieldValue(`questions`, questionIndex)}
+          children={<X />}
+        />
+      </QuestionCardButtonsBar>
+      <QuestionCardHeader>
+        <QuestionCardTitle>Text Question</QuestionCardTitle>
       </QuestionCardHeader>
       <form.Field
         name={`questions[${questionIndex}].question`}
