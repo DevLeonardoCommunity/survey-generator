@@ -119,6 +119,19 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
           }}
         />
         <QuestionCardTitle>Choice Question</QuestionCardTitle>
+        <form.Field
+          name={`questions[${questionIndex}].required`}
+          children={(field) => (
+            <Button
+              variant={field.state.value ? "destructive" : "outline"}
+              size="sm"
+              onClick={() => field.setValue(!field.state.value)}
+              className="ml-auto"
+            >
+              {field.state.value ? "Required" : "Optional"}
+            </Button>
+          )}
+        />
       </QuestionCardHeader>
       <form.Field
         name={`questions[${questionIndex}].question`}

@@ -30,7 +30,7 @@ const QuestionCardHeader = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "grid grid-flow-col justify-center items-center w-full",
+      "grid grid-flow-col justify-center items-center w-full mt-8",
       Children.count(props.children) === 1 ? "grid-cols-1" : "grid-cols-3",
       className
     )}
