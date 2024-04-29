@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { SurveyDefinition } from "@/types/survey";
 import { FormApi } from "@tanstack/react-form";
 import { valibotValidator } from "@tanstack/valibot-form-adapter";
-import { X } from "lucide-react";
+import { Copy, X } from "lucide-react";
 import {
   QuestionCard,
   QuestionCardBarButton,
@@ -14,6 +14,7 @@ import {
   QuestionCardTitle,
 } from "../question-card";
 import { Separator } from "@/components/ui/separator";
+import { generateId } from "@/lib/utils";
 
 type Props = {
   questionIndex: number;
@@ -21,6 +22,16 @@ type Props = {
 };
 
 export const TextFormField = ({ questionIndex, form }: Props) => {
+  const duplicateQuestion = () => {
+    const question = form.state.values.questions[questionIndex];
+    form.pushFieldValue("questions", { ...question, id: generateId() });
+    form.moveFieldValues(
+      "questions",
+      form.state.values.questions.length - 1,
+      questionIndex + 1
+    );
+  };
+
   return (
     <QuestionCard>
       <QuestionCardButtonsBar>
@@ -38,6 +49,10 @@ export const TextFormField = ({ questionIndex, form }: Props) => {
           )}
         />
         <Separator orientation="vertical" />
+        <QuestionCardBarButton
+          onClick={duplicateQuestion}
+          children={<Copy />}
+        />
         <QuestionCardBarButton
           onClick={() => form.removeFieldValue(`questions`, questionIndex)}
           children={<X />}
