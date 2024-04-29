@@ -24,7 +24,12 @@ type Props = {
 export const TextFormField = ({ questionIndex, form }: Props) => {
   const duplicateQuestion = () => {
     const question = form.state.values.questions[questionIndex];
-    form.insertFieldValue("questions", questionIndex + 1, { ...question, id: generateId() }, { touch: true });
+    form.pushFieldValue("questions", { ...question, id: generateId() });
+    form.moveFieldValues(
+      "questions",
+      form.state.values.questions.length - 1,
+      questionIndex + 1
+    );
   };
 
   return (
