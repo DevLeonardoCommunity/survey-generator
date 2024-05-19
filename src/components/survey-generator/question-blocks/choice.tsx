@@ -12,34 +12,28 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { cn, generateId } from "@/lib/utils";
-import { ChoiceQuestion, SurveyDefinition } from "@/types/survey";
-import { FormApi } from "@tanstack/react-form";
-import { valibotValidator } from "@tanstack/valibot-form-adapter";
+import { ChoiceQuestion } from "@/types/survey";
 import {
   CheckCircle2,
   CheckSquare2,
   ChevronDown,
+  Copy,
   LucideIcon,
   X,
-  Copy,
 } from "lucide-react";
 import { useState } from "react";
 import {
   QuestionCard,
-  QuestionCardButtonsBar,
   QuestionCardBarButton,
+  QuestionCardButtonsBar,
   QuestionCardHeader,
   QuestionCardItem,
   QuestionCardTitle,
 } from "../question-card";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-
-type Props = {
-  questionIndex: number;
-  form: FormApi<SurveyDefinition, typeof valibotValidator>;
-};
+import { BlockProps } from "./types";
 
 const variants: {
   [key in ChoiceQuestion["variant"]]: {
@@ -63,18 +57,12 @@ const variants: {
 
 const iconClassName = "text-muted-foreground";
 
-export const ChoiceFormField = ({ questionIndex, form }: Props) => {
+export const ChoiceFormField = ({
+  questionIndex,
+  form,
+  onDuplicateQuestion,
+}: BlockProps) => {
   const [isVariantSelectorOpen, setIsVarianSelectorOpen] = useState(false);
-
-  const duplicateQuestion = () => {
-    const question = form.state.values.questions[questionIndex];
-    form.pushFieldValue("questions", { ...question, id: generateId() });
-    form.moveFieldValues(
-      "questions",
-      form.state.values.questions.length - 1,
-      questionIndex + 1
-    );
-  };
 
   return (
     <QuestionCard key={questionIndex}>
@@ -94,7 +82,7 @@ export const ChoiceFormField = ({ questionIndex, form }: Props) => {
         />
         <Separator orientation="vertical" />
         <QuestionCardBarButton
-          onClick={duplicateQuestion}
+          onClick={onDuplicateQuestion}
           children={<Copy />}
         />
         <QuestionCardBarButton

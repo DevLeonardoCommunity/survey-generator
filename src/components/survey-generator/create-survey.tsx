@@ -1,19 +1,10 @@
-import { useStorage } from "@/hooks/useStorage";
-import { generateId } from "@/lib/utils";
-import {
-  ChoiceQuestion,
-  QuestionType,
-  SurveyDefinition,
-  TextQuestion,
-} from "@/types/survey";
-import { useForm } from "@tanstack/react-form";
-import { useNavigate } from "@tanstack/react-router";
-import { valibotValidator } from "@tanstack/valibot-form-adapter";
+import { useSurveyForm } from "@/hooks/useSurveyForm";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { ChoiceFormField } from "./question-blocks/choice";
 import { TextFormField } from "./question-blocks/text";
+import { BlockProps } from "./question-blocks/types";
 import {
   QuestionCard,
   QuestionCardItem,
@@ -21,69 +12,8 @@ import {
 } from "./question-card";
 import { SelectQuestionType } from "./select-question-type";
 
-const defaultValues: SurveyDefinition = {
-  id: generateId(),
-  main: {
-    title: "",
-    description: "",
-  },
-  questions: [],
-};
-
 export const CreateSurvey = () => {
-  const navigate = useNavigate();
-  const { save } = useStorage();
-  const form = useForm({
-    validatorAdapter: valibotValidator,
-    validators: {
-      onChangeAsyncDebounceMs: 500,
-      onChange: SurveyDefinition,
-    },
-    defaultValues,
-    onSubmitInvalid: (x) => {
-      console.log(x);
-    },
-    onSubmit: async ({ value }) => {
-      save(value);
-    },
-  });
-
-  const onAddQuestion = (questionType: QuestionType) => {
-    const getDefault = () => {
-      switch (questionType) {
-        case "text":
-          return {
-            type: "text",
-            question: "",
-          } as TextQuestion;
-        case "choice":
-          return {
-            type: "choice",
-            variant: "multiple",
-            question: "",
-            options: [
-              {
-                id: generateId(),
-              },
-            ] as ChoiceQuestion["options"],
-          } as ChoiceQuestion;
-      }
-    };
-
-    const newQuestion = {
-      ...getDefault(),
-      id: generateId(),
-    };
-
-    form.pushFieldValue("questions", newQuestion);
-  };
-
-  const onShowClick = () => {
-    if (!form.state.values.id) return;
-
-    navigate({ to: "/$id", params: { id: form.state.values.id } });
-  };
-
+  const { form, onAddQuestion, onDuplicateQuestion } = useSurveyForm();
   return (
     <form
       onSubmit={(e) => {
@@ -91,7 +21,7 @@ export const CreateSurvey = () => {
         e.stopPropagation();
         void form.handleSubmit();
       }}
-      className="w-full flex flex-col items-center mb-6"
+      className="w-full flex flex-col items-center mb-6 gap-6"
     >
       <div className="flex flex-col gap-3 items-center w-[800px] max-w-[95%]">
         <QuestionCard>
@@ -132,15 +62,16 @@ export const CreateSurvey = () => {
         <form.Field name="questions" mode="array">
           {(field) =>
             field.state.value.map((_, i) => {
+              const props: BlockProps = {
+                questionIndex: i,
+                form,
+                onDuplicateQuestion: () => onDuplicateQuestion(i),
+              };
               switch (field.state.value[i].type) {
                 case "text":
-                  return (
-                    <TextFormField key={i} questionIndex={i} form={form} />
-                  );
+                  return <TextFormField key={i} {...props} />;
                 case "choice":
-                  return (
-                    <ChoiceFormField key={i} questionIndex={i} form={form} />
-                  );
+                  return <ChoiceFormField key={i} {...props} />;
               }
             })
           }
@@ -154,23 +85,7 @@ export const CreateSurvey = () => {
       <form.Subscribe
         selector={(state) => [state.canSubmit, state.isSubmitting]}
         children={([canSubmit, isSubmitting]) => (
-          <div className="flex justify-center gap-3 mt-6">
-            <Button disabled={!canSubmit || isSubmitting}>Save</Button>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => console.log(form.state.values)}
-            >
-              Peek
-            </Button>
-            <Button
-              type="button"
-              onClick={onShowClick}
-              disabled={!form.state.values.id}
-            >
-              Show
-            </Button>
-          </div>
+          <Button disabled={!canSubmit || isSubmitting}>Generate Survey</Button>
         )}
       />
     </form>

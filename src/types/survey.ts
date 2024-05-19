@@ -12,7 +12,7 @@ export const TextQuestion = v.merge([
     question: v.string([
       v.minLength(3, "Question must be at least 3 characters"),
     ]),
-    required: v.boolean(), // Added required field
+    required: v.boolean(),
   }),
 ]);
 export type TextQuestion = v.Output<typeof TextQuestion>;
@@ -38,7 +38,7 @@ export const ChoiceQuestion = v.merge([
       }),
       [v.minLength(2, "There must be at least 2 options")]
     ),
-    required: v.boolean(), // Added required field
+    required: v.boolean(),
   }),
 ]);
 export type ChoiceQuestion = v.Output<typeof ChoiceQuestion>;
