@@ -20,7 +20,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@tailwindcss/typography": "^0.5.13",
-    "@tanstack/react-form": "^0.19.4",
+    "@tanstack/react-form": "^0.29.1",
     "@tanstack/react-router": "^1.31.1",
     "@tanstack/valibot-form-adapter": "^0.13.7",
     "class-variance-authority": "^0.7.0",
